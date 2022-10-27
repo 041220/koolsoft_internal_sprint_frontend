@@ -15,14 +15,13 @@ import SprintSlice from '../../redux/slices/SprintSlice';
 
 
 export interface ColumnProps {
-    editColumn: string,
-    setEditColumn: (value: string) => void,
+    editColumnId: string,
     key: string,
     column: ColumnType
 
 }
 
-const Column: React.FC<ColumnProps> = ({ column, editColumn, setEditColumn }) => {
+const Column: React.FC<ColumnProps> = ({ column, editColumnId }) => {
     const [isOpenForm, setIsOpenForm] = useState(false)
     const [nameTask, setNameTask] = useState('')
 
@@ -48,10 +47,10 @@ const Column: React.FC<ColumnProps> = ({ column, editColumn, setEditColumn }) =>
     console.log("column:", column);
 
     const handleAddNewTask = () => {
-        console.log("CHECKID:", editColumn);
+        console.log("CHECKID:", editColumnId);
 
         dispatch(SprintSlice.actions.addNewTask({
-            id: editColumn,
+            id: editColumnId,
             tasks: {
                 _id: v4(),
                 name: nameTask

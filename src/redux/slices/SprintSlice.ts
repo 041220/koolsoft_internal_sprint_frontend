@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ColumnType, SprintType, Task } from "../../components/TaskHome";
+import { ColumnType } from "../../components/TaskHome";
 
 const saveSprintToLocalStorage = (sprint: any) => {
     try {

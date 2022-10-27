@@ -54,11 +54,26 @@
         position: fixed;
         bottom: 0;
         right: 0;
-        height: 60px;
+        height: 70px;
         width: 100px;
 
+
         .btn-add-task-home {
-            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            height: 33px;
+            border: none;
+            border-radius: 8px;
+            background-color: #7b68ee;
+            color: white;
+            padding: 0 8px 0 6px;
+
+        }
+
+        .btn-add-task-home:hover {
+            background-color: #593fee;
+
         }
     }
 }

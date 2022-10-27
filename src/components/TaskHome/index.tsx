@@ -6,7 +6,7 @@ import Column from '../Column/Column'
 import "./index.scss"
 import { v4 } from 'uuid'
 import SprintSlice from '../../redux/slices/SprintSlice'
-
+import AddIcon from '@mui/icons-material/Add';
 
 export type SprintType = {
     sprint: ColumnType[]
@@ -40,7 +40,6 @@ export type Task = {
 
 const TasksHome: React.FC = () => {
     const [displayModal, setDisplayModal] = useState<boolean>(false)
-    const [editColumn, setEditColumn] = useState<any>(undefined)
     const [columns, setColumns] = useState<ColumnType[]>([
         { id: "op", title: "OPEN", color: "rgb(211, 211, 211)", tasks: [] },
         { id: "ip", title: "IN PROGRESS", color: "rgb(255, 84, 13)", tasks: [] },
@@ -105,7 +104,7 @@ const TasksHome: React.FC = () => {
                         <div className='content-column-bag' key={column.id}>
                             <div className='content-column-item'>
 
-                                <Column editColumn={column.id} setEditColumn={setEditColumn} key={column.id} column={column} />
+                                <Column editColumnId={column.id} key={column.id} column={column} />
 
                             </div>
                         </div>
@@ -118,7 +117,7 @@ const TasksHome: React.FC = () => {
                 <button className='btn-add-task-home'
                     onClick={handleOpenModal}
                 >
-                    AddTask
+                    <AddIcon style={{ fontSize: '17px', color: 'white' }} /> <span style={{ fontSize: '13px', fontWeight: '600' }}>Task</span>
                 </button>
             </div>
         </div>
