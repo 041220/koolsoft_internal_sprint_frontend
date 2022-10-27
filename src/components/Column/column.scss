@@ -1,0 +1,95 @@
+.Column {}
+
+.btn-add-task-onlyColumn {
+    display: flex;
+    align-items: center;
+    border: none;
+    background-color: #eee;
+    color: #34343466;
+    font-size: 13px;
+
+}
+
+.btn-add-task-onlyColumn:hover {
+    color: rgb(65, 67, 173);
+}
+
+#form-add-task {
+    width: 100%;
+    background-color: white;
+    border-radius: 4px;
+    border: 2px solid rgb(132, 135, 213);
+    padding: 10px 0 8px 0;
+
+    .top-form-addTask-onlyColumn {
+        display: flex;
+        align-items: center;
+        padding: 2px 5px 5px 4px;
+
+        .btn-cancle-addTask-onlyColumn {
+            padding-left: 2px;
+            padding-right: 2px;
+            border: none;
+            background-color: white;
+            color: #34343466;
+            height: 20px;
+
+            .icon-clear-add-task {
+                font-size: 14px;
+            }
+        }
+
+        .input-addTask-onlyColumn {
+            border: none;
+            width: 170px;
+            outline: none;
+        }
+
+        ::placeholder {
+            color: #34343466;
+            opacity: 1;
+            font-size: 13px;
+        }
+
+        .btn-add-assign {
+
+            background-color: white;
+            padding: 1px 3px 1px 3px;
+            color: #34343466;
+            border-radius: 40px;
+            border: 1px dashed #3434348f;
+            margin-left: 5px;
+
+            .icon-add-assign {
+
+                font-size: 20px;
+            }
+
+            .icon-add-custom {
+                position: absolute;
+                font-size: 13px;
+                margin-top: 12px;
+                margin-left: -10px;
+                color: #747272ca;
+            }
+        }
+    }
+
+    .footer-form-addTask-onlyColumn {
+        display: flex;
+        align-items: center;
+        margin-top: 15px;
+
+        .btn-save-addTask-onlyColumn {
+            align-items: flex-end;
+            border: none;
+            border-radius: 3px;
+            background-color: #7f6fda;
+            color: white;
+            padding: 3px 5px 3px 5px;
+            font-size: 10px;
+            height: 20px;
+        }
+    }
+
+}
