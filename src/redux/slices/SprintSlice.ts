@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { SprintType } from "../../components/TaskHome";
+import { ColumnType, SprintType } from "../../components/TaskHome";
 
 const saveSprintToLocalStorage = (sprint: any) => {
     try {
@@ -19,13 +19,33 @@ const SprintSlice = createSlice({
             state.sprint = action.payload
             saveSprintToLocalStorage(state.sprint)
         },
+        addNewTask: (state, action) => {
+            // state.sprint.map((item: any) => {
+            //     return (
+            //         item.id === action.payload.id
+            //             ? { ...item, tasks: [...item.tasks, ...action.payload.tasks] }
+            //             : { ...item }
+            //     )
+            // })
+            console.log("checkColumn:", action.payload.tasks);
+            state.sprint = state.sprint.map((item: ColumnType) => {
+                return (
+                    item.id === action.payload.id
+                        ? { ...item, tasks: [...item.tasks, ...action.payload.tasks] }
+                        : { ...item }
+                )
+            })
+            console.log("checkSprint:", state.sprint);
+
+            saveSprintToLocalStorage(state.sprint)
+        },
         updateSprint: (state, action) => {
             console.log("action.payload:", action.payload);
 
             state.sprint.map((item: any) => {
                 return (
                     item.id === action.payload.id
-                        ? { ...item, tasks: [...item.tasks, ...action.payload.tasks] }
+                        ? { ...item, tasks: [...item.tasks, { ...action.payload.tasks }] }
                         : { ...item }
                 )
             })

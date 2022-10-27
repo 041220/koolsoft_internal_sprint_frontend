@@ -1,11 +1,9 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import ColumnSlice from './slices/ColumnSlice';
 import SprintSlice from './slices/SprintSlice';
 
 
 export const store = configureStore({
   reducer: {
-    oneColumn: ColumnSlice.reducer,
     oneSprint: SprintSlice.reducer,
   },
 });

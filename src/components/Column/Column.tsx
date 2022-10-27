@@ -11,7 +11,6 @@ import TourOutlinedIcon from '@mui/icons-material/TourOutlined';
 import ScheduleSendOutlinedIcon from '@mui/icons-material/ScheduleSendOutlined';
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 import { useDispatch, useSelector } from 'react-redux';
-import ColumnSlice from '../../redux/slices/ColumnSlice';
 import SprintSlice from '../../redux/slices/SprintSlice';
 
 
@@ -30,9 +29,6 @@ const Column: React.FC<ColumnProps> = ({ column, editColumn, setEditColumn }) =>
     const dispatch = useDispatch();
 
     const dataSprint = useSelector((state: any) => state.oneSprint.sprint)
-    const dataColumn = useSelector((state: any) => state.oneColumn)
-
-
 
     console.log("name:", nameTask);
 
@@ -53,15 +49,15 @@ const Column: React.FC<ColumnProps> = ({ column, editColumn, setEditColumn }) =>
     const handleAddNewTask = () => {
         console.log("CHECKID:", editColumn);
 
-        dispatch(ColumnSlice.actions.addNewTask({
+        dispatch(SprintSlice.actions.addNewTask({
             id: editColumn,
             tasks: {
                 _id: v4(),
                 name: nameTask
             }
         }))
-        console.log("check1:", dataColumn);
-        dispatch(SprintSlice.actions.updateSprint(dataColumn))
+        // console.log("check1:", dataColumn);
+        // dispatch(SprintSlice.actions.updateSprint(dataColumn))
         // columns.map(item => (item.id === column.id ? { ...item, tasks: [...item.tasks, { id: v4(), name: nameTask }] } : { ...item }))
     }
     return (
