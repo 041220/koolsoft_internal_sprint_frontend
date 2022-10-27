@@ -45,6 +45,7 @@ const Column: React.FC<ColumnProps> = ({ column, editColumn, setEditColumn }) =>
     //     dispatch(ColumnSlice.actions.getDataColumn(itemColumn))
     // }, [dispatch, itemColumn])
 
+    console.log("column:", column);
 
     const handleAddNewTask = () => {
         console.log("CHECKID:", editColumn);
@@ -75,7 +76,7 @@ const Column: React.FC<ColumnProps> = ({ column, editColumn, setEditColumn }) =>
                 }
                 {
                     isOpenForm
-                        ? <div id='form-add-task' >
+                        ? <form id='form-add-task' onSubmit={handleAddNewTask} >
 
                             <div className='top-form-addTask-onlyColumn'>
                                 <button className='btn-cancle-addTask-onlyColumn' onClick={() => setIsOpenForm(false)}><ClearIcon className='icon-clear-add-task' /></button>
@@ -98,9 +99,9 @@ const Column: React.FC<ColumnProps> = ({ column, editColumn, setEditColumn }) =>
                                         <EventAvailableOutlinedIcon style={{ color: '#3434348f', fontSize: '22px' }} />
                                     </IconButton>
                                 </div>
-                                <button className='btn-save-addTask-onlyColumn' onClick={handleAddNewTask}>SAVE</button>
+                                <button type='submit' className='btn-save-addTask-onlyColumn' >SAVE</button>
                             </div>
-                        </div>
+                        </form>
                         : <button className='btn-add-task-onlyColumn' onClick={() => setIsOpenForm(true)}>+ NEW TASK</button>
                 }
             </div>

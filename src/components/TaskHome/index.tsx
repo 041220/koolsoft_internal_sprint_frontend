@@ -42,7 +42,7 @@ const TasksHome: React.FC = () => {
     const [displayModal, setDisplayModal] = useState<boolean>(false)
     const [editColumn, setEditColumn] = useState<any>(undefined)
     const [columns, setColumns] = useState<ColumnType[]>([
-        { id: "op", title: "OPEN", color: "rgb(211, 211, 211)", tasks: [{ _id: 'djaskd', name: 'task1' }] },
+        { id: "op", title: "OPEN", color: "rgb(211, 211, 211)", tasks: [] },
         { id: "ip", title: "IN PROGRESS", color: "rgb(255, 84, 13)", tasks: [] },
         { id: "rv", title: "REVIEW", color: "rgb(255, 153, 0)", tasks: [] },
         { id: "bg", title: "BUG", color: "rgb(0, 0, 0);", tasks: [] },
@@ -50,7 +50,9 @@ const TasksHome: React.FC = () => {
     ])
 
     const dispatch = useDispatch();
-    dispatch(SprintSlice.actions.initSprint(columns))
+    useEffect(() => {
+        dispatch(SprintSlice.actions.initSprint(columns))
+    }, [dispatch, columns])
     const sprintData = useSelector((state: any) => state.oneSprint.sprint)
 
     console.log("checkSprint:", sprintData);
@@ -78,7 +80,7 @@ const TasksHome: React.FC = () => {
 
             <div className='title-column'>
                 {
-                    (sprintData as ColumnType[]).map(column => (
+                    sprintData.map((column: any) => (
                         <div className='title-column-bag' style={{ borderTopColor: `${column.color}` }}>
                             <div className='title-column-h2'>
                                 <span className='title-column-text'>{column.title}</span>
@@ -98,7 +100,7 @@ const TasksHome: React.FC = () => {
             </Modal>
             <div className='content-column'>
                 {
-                    columns.map((column) => (
+                    sprintData.map((column: any) => (
 
                         <div className='content-column-bag' key={column.id}>
                             <div className='content-column-item'>
