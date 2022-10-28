@@ -12,6 +12,7 @@ import ScheduleSendOutlinedIcon from '@mui/icons-material/ScheduleSendOutlined';
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 import SprintSlice from '../../redux/slices/SprintSlice';
+import { Droppable } from 'react-beautiful-dnd';
 
 
 export interface ColumnProps {
@@ -29,25 +30,13 @@ const Column: React.FC<ColumnProps> = ({ column, editColumnId }) => {
 
     const dataSprint = useSelector((state: any) => state.oneSprint.sprint)
 
-    console.log("name:", nameTask);
+    // console.log("name:", nameTask);
 
 
-    // const itemColumn = useMemo(() => {
-    //     return (
-    //         dataSprint.find((item: { id: string }) => item.id === editColumn)
-    //     )
-    // }, [editColumn, dataSprint])
-
-
-    // console.log("itemColumn:", itemColumn);
-    // useEffect(() => {
-    //     dispatch(ColumnSlice.actions.getDataColumn(itemColumn))
-    // }, [dispatch, itemColumn])
-
-    console.log("column:", column);
+    // console.log("column:", column);
 
     const handleAddNewTask = () => {
-        console.log("CHECKID:", editColumnId);
+        // console.log("CHECKID:", editColumnId);
 
         dispatch(SprintSlice.actions.addNewTask({
             id: editColumnId,
@@ -56,23 +45,39 @@ const Column: React.FC<ColumnProps> = ({ column, editColumnId }) => {
                 name: nameTask
             }
         }))
-        // console.log("check1:", dataColumn);
-        // dispatch(SprintSlice.actions.updateSprint(dataColumn))
-        // columns.map(item => (item.id === column.id ? { ...item, tasks: [...item.tasks, { id: v4(), name: nameTask }] } : { ...item }))
+
     }
     return (
         <div className='Column'>
-            <div className='Column__list-task'>
-                {
 
-                    column.tasks.map(task => (
-                        <div className='column-task-bag'>
-                            <div className='columns-task-item'>
-                                <TaskItem task={task} />
+            <div className='Column__list-task'>
+                <Droppable droppableId={column.id}>
+                    {
+                        provided => (
+                            <div ref={provided.innerRef}
+                                {...provided.droppableProps}
+                            >
+                                {
+
+                                    column.tasks.map((task, taskIndex) => (
+                                        <div className='column-task-bag'>
+                                            <div className='columns-task-item'>
+                                                <TaskItem
+                                                    key={task._id}
+                                                    index={taskIndex}
+                                                    task={task}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+
+
+                                {provided.placeholder}
                             </div>
-                        </div>
-                    ))
-                }
+                        )
+                    }
+                </Droppable>
                 {
                     isOpenForm
                         ? <form id='form-add-task' onSubmit={handleAddNewTask} >
@@ -104,6 +109,7 @@ const Column: React.FC<ColumnProps> = ({ column, editColumnId }) => {
                         : <button className='btn-add-task-onlyColumn' onClick={() => setIsOpenForm(true)}>+ NEW TASK</button>
                 }
             </div>
+
         </div>
     )
 }

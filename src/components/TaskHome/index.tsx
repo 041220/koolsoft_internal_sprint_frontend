@@ -7,6 +7,7 @@ import "./index.scss"
 import { v4 } from 'uuid'
 import SprintSlice from '../../redux/slices/SprintSlice'
 import AddIcon from '@mui/icons-material/Add';
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd"
 
 export type SprintType = {
     sprint: ColumnType[]
@@ -39,7 +40,8 @@ export type Task = {
 }
 
 const TasksHome: React.FC = () => {
-    const [displayModal, setDisplayModal] = useState<boolean>(false)
+    // const [displayModal, setDisplayModal] = useState<boolean>(false)
+    const [openFormAdd, setOpenFormAdd] = useState<boolean>(false)
     const [columns, setColumns] = useState<ColumnType[]>([
         { id: "op", title: "OPEN", color: "rgb(211, 211, 211)", tasks: [] },
         { id: "ip", title: "IN PROGRESS", color: "rgb(255, 84, 13)", tasks: [] },
@@ -48,20 +50,16 @@ const TasksHome: React.FC = () => {
         { id: "cl", title: "CLOSED", color: "rgb(107, 201, 80)", tasks: [] },
     ])
 
+
     const dispatch = useDispatch();
+    //push init data task vào store
     useEffect(() => {
         dispatch(SprintSlice.actions.initSprint(columns))
     }, [dispatch, columns])
     const sprintData = useSelector((state: any) => state.oneSprint.sprint)
-
     console.log("checkSprint:", sprintData);
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         console.log("1");
-    //         localStorage.setItem("columnsSprint", JSON.stringify(columns))
-    //     }, 200)
-    // }, [dispatch, columns])
+    //Lấy data các task từ local về push vào store
     useEffect(() => {
         const getDataSprint = localStorage.getItem("oneSprint");
         if (getDataSprint) {
@@ -70,10 +68,40 @@ const TasksHome: React.FC = () => {
 
     }, [dispatch])
 
+    // const handleOpenModal = () => setDisplayModal(true);
+    // const handleCloseModal = () => setDisplayModal(false);
+
+    const handleSaveDrag = (result: DropResult) => {
+        const { source, destination, draggableId } = result;
+        console.log("draggableId:", draggableId);
 
 
-    const handleOpenModal = () => setDisplayModal(true);
-    const handleCloseModal = () => setDisplayModal(false);
+        if (destination?.droppableId === source.droppableId) {
+            // const destinationColumn = sprintData.find((column: any) => column.id === destination?.droppableId)
+            dispatch(SprintSlice.actions.reoderDragDrop(result))
+        }
+
+        else {
+            //Lấy cột gốc của task drag
+            const sourceColumn = sprintData.find((column: any) => column.id === source.droppableId);
+            //Lấy cột đích của task drop
+            const destinationColumn = sprintData.find((column: any) => column.id === destination?.droppableId)
+            console.log("checkColumnDrag:", sprintData.find((column: any) => column.id === destination?.droppableId));
+
+            //Lấy task drag ra
+            const taskDragg = sourceColumn.tasks.find((task: any) => task._id === draggableId)
+            console.log("checkTask:", taskDragg);
+
+            //remove task drag ở cột gốc
+            dispatch(SprintSlice.actions.removeDragDrop({ draggableId, sourceColumn }))
+            //push task drop vào cột đích
+            dispatch(SprintSlice.actions.updateDragDrop({ taskDragg, destinationColumn }))
+
+        }
+
+
+    }
+
     return (
         <div className='container-column'>
 
@@ -91,36 +119,50 @@ const TasksHome: React.FC = () => {
                     ))
                 }
             </div>
-            <Modal
-                open={displayModal}
-                onClose={handleCloseModal}
-            >
-                <AddNewModal displayModal={displayModal} setDisplayModal={setDisplayModal} />
-            </Modal>
-            <div className='content-column'>
+
+            <DragDropContext onDragEnd={handleSaveDrag}>
+                <div className='content-column'>
+                    {
+                        sprintData.map((column: any) => (
+
+                            <div className='content-column-bag' key={column.id}>
+                                <div className='content-column-item'>
+
+                                    <Column editColumnId={column.id} key={column.id} column={column} />
+
+                                </div>
+                            </div>
+
+                        ))
+                    }
+
+                </div>
+            </DragDropContext>
+            <div className='add-task-home'>
+
                 {
-                    sprintData.map((column: any) => (
-
-                        <div className='content-column-bag' key={column.id}>
-                            <div className='content-column-item'>
-
-                                <Column editColumnId={column.id} key={column.id} column={column} />
+                    openFormAdd
+                        ? <form id='form-add-task-home'>
+                            <div className='div-input-name-task'>
 
                             </div>
-                        </div>
+                            <div className='div-name-sprint-task'>
 
-                    ))
+                            </div>
+                            <div>
+
+                            </div>
+                            <div>
+
+                            </div>
+                        </form>
+                        :
+                        <button className='btn-add-task-home' onClick={() => setOpenFormAdd(true)}>
+                            <AddIcon style={{ fontSize: '17px', color: 'white' }} /> <span style={{ fontSize: '13px', fontWeight: '600' }}>Task</span>
+                        </button>
                 }
-
             </div>
-            <div className='add-task-home'>
-                <button className='btn-add-task-home'
-                    onClick={handleOpenModal}
-                >
-                    <AddIcon style={{ fontSize: '17px', color: 'white' }} /> <span style={{ fontSize: '13px', fontWeight: '600' }}>Task</span>
-                </button>
-            </div>
-        </div>
+        </div >
     )
 }
 
