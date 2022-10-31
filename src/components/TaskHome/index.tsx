@@ -72,36 +72,56 @@ const TasksHome: React.FC = () => {
     // const handleCloseModal = () => setDisplayModal(false);
 
     const handleSaveDrag = (result: DropResult) => {
+        if (!result.destination) {
+            return;
+        }
         const { source, destination, draggableId } = result;
         console.log("draggableId:", draggableId);
-
+        // console.log("result", result);
 
         if (destination?.droppableId === source.droppableId) {
-            // const destinationColumn = sprintData.find((column: any) => column.id === destination?.droppableId)
-            dispatch(SprintSlice.actions.reoderDragDrop(result))
-        }
+            const tasks = sprintData.find((column: any) => column.id === destination?.droppableId).tasks;
+            const dataTask = Array.from(tasks)
+            const [removed] = dataTask.splice(source.index, 1)
 
+            dataTask.splice(destination.index, 0, removed)
+            // console.log("removed:", removed);
+            // console.log("dataTask:", dataTask);
+
+            dispatch(SprintSlice.actions.reoderDragDrop({ result, dataTask }))
+        }
         else {
             //Lấy cột gốc của task drag
             const sourceColumn = sprintData.find((column: any) => column.id === source.droppableId);
             //Lấy cột đích của task drop
-            const destinationColumn = sprintData.find((column: any) => column.id === destination?.droppableId)
-            console.log("checkColumnDrag:", sprintData.find((column: any) => column.id === destination?.droppableId));
+            const destinationColumn = sprintData.find((column: any) => column.id === destination?.droppableId).tasks;
+            const dataTaskDes = Array.from(destinationColumn)
+            console.log("checkColumnDrag:", dataTaskDes);
+
+
+
+            //remove task drag ở cột gốc
+            dispatch(SprintSlice.actions.removeDragDrop({ draggableId, sourceColumn }))
 
             //Lấy task drag ra
             const taskDragg = sourceColumn.tasks.find((task: any) => task._id === draggableId)
             console.log("checkTask:", taskDragg);
-
-            //remove task drag ở cột gốc
-            dispatch(SprintSlice.actions.removeDragDrop({ draggableId, sourceColumn }))
+            dataTaskDes.splice(destination.index, 0, taskDragg)
             //push task drop vào cột đích
-            dispatch(SprintSlice.actions.updateDragDrop({ taskDragg, destinationColumn }))
+            dispatch(SprintSlice.actions.updateDragDrop({ dataTaskDes, result }))
 
         }
-
-
     }
+    const handleOnFormAddTask = () => {
+        setOpenFormAdd(true)
+        if (openFormAdd) {
+            return (
+                <form>
 
+                </form>
+            )
+        }
+    }
     return (
         <div className='container-column'>
 
@@ -120,8 +140,9 @@ const TasksHome: React.FC = () => {
                 }
             </div>
 
-            <DragDropContext onDragEnd={handleSaveDrag}>
-                <div className='content-column'>
+
+            <div className='content-column'>
+                <DragDropContext onDragEnd={handleSaveDrag}>
                     {
                         sprintData.map((column: any) => (
 
@@ -135,32 +156,14 @@ const TasksHome: React.FC = () => {
 
                         ))
                     }
+                </DragDropContext>
+            </div>
 
-                </div>
-            </DragDropContext>
             <div className='add-task-home'>
 
-                {
-                    openFormAdd
-                        ? <form id='form-add-task-home'>
-                            <div className='div-input-name-task'>
-
-                            </div>
-                            <div className='div-name-sprint-task'>
-
-                            </div>
-                            <div>
-
-                            </div>
-                            <div>
-
-                            </div>
-                        </form>
-                        :
-                        <button className='btn-add-task-home' onClick={() => setOpenFormAdd(true)}>
-                            <AddIcon style={{ fontSize: '17px', color: 'white' }} /> <span style={{ fontSize: '13px', fontWeight: '600' }}>Task</span>
-                        </button>
-                }
+                <button className='btn-add-task-home' onClick={handleOnFormAddTask}>
+                    <AddIcon style={{ fontSize: '17px', color: 'white' }} /> <span style={{ fontSize: '13px', fontWeight: '600' }}>Task</span>
+                </button>
             </div>
         </div >
     )

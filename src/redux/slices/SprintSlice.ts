@@ -38,38 +38,38 @@ const SprintSlice = createSlice({
                 return (
                     item.id === action.payload.sourceColumn.id
                         ? { ...item, tasks: item.tasks = item.tasks.filter((task: any) => task._id !== action.payload.draggableId) }
-                        : { ...item, tasks: [...item.tasks] }
+                        : { ...item }
                 )
             })
             saveSprintToLocalStorage(state.sprint)
         },
         updateDragDrop: (state, action) => {
-            console.log("action.payload2:", action.payload);
+
+            console.log("action.payload2:", action.payload.taskDragg);
             state.sprint = state.sprint.map((item: any) => {
                 return (
-                    item.id === action.payload.destinationColumn.id
-                        ? { ...item, tasks: [...item.tasks, { ...action.payload.taskDragg }] }
-                        : { ...item, tasks: [...item.tasks] }
+                    item.id === action.payload.result.destination.droppableId
+                        ? { ...item, tasks: [...item.task = action.payload.dataTaskDes] }
+                        : { ...item }
                 )
             })
+
             saveSprintToLocalStorage(state.sprint)
         },
         reoderDragDrop: (state, action) => {
-            console.log("action.payload:", action.payload);
+            console.log("actin.payloadTest:", action.payload);
 
-            // state.sprint = state.sprint.map((item: any) => {
+            state.sprint = state.sprint.map((item: any) => {
 
-            //     const [removed] = item.tasks.splice(action.payload.source.index, 1)
-            //     console.log("moved:", removed);
-            //     return (
-            //         item.id === action.payload.destination.draggableId
+                return (
+                    item.id === action.payload.result.destination.droppableId
+                        ? { ...item, tasks: [...item.tasks = action.payload.dataTask] }
+                        : { ...item }
+                )
 
-            //             ? { ...item, tasks: [...item.tasks, { ...item.tasks.splice(action.payload.destination.index, 0, removed) }] }
-            //             : { ...item }
-
-
-            //     )
-            // })
+            })
+            console.log("state.sprint2:", state.sprint);
+            saveSprintToLocalStorage(state.sprint)
         },
         getDataSprintLocal: (state, action) => {
             state.sprint = action.payload

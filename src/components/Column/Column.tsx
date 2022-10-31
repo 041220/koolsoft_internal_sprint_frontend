@@ -51,7 +51,7 @@ const Column: React.FC<ColumnProps> = ({ column, editColumnId }) => {
         <div className='Column'>
 
             <div className='Column__list-task'>
-                <Droppable droppableId={column.id}>
+                <Droppable droppableId={column.id} key={column.id}>
                     {
                         provided => (
                             <div ref={provided.innerRef}
@@ -108,6 +108,7 @@ const Column: React.FC<ColumnProps> = ({ column, editColumnId }) => {
                         </form>
                         : <button className='btn-add-task-onlyColumn' onClick={() => setIsOpenForm(true)}>+ NEW TASK</button>
                 }
+
             </div>
 
         </div>

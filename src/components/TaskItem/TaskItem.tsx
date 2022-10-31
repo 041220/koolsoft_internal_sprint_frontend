@@ -9,7 +9,7 @@ type TaskItemProps = {
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({ task, index }) => {
-    // console.log("index:", index);
+    // console.log("idTask:", task);
 
     return (
 
@@ -17,7 +17,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, index }) => {
             <Draggable
                 index={index}
                 draggableId={task._id}
-
+                key={task._id}
             >
                 {
                     provided => (
