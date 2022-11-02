@@ -13,6 +13,7 @@ import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlin
 import { useDispatch, useSelector } from 'react-redux';
 import SprintSlice from '../../redux/slices/SprintSlice';
 import { Droppable } from 'react-beautiful-dnd';
+import TasksSlice from '../../redux/slices/TasksSlice';
 
 
 export interface ColumnProps {
@@ -25,25 +26,27 @@ export interface ColumnProps {
 const Column: React.FC<ColumnProps> = ({ column, editColumnId }) => {
     const [isOpenForm, setIsOpenForm] = useState(false)
     const [nameTask, setNameTask] = useState('')
-
+    const [taskIndex, setTaskIndex] = useState<number>()
     const dispatch = useDispatch();
 
     const dataSprint = useSelector((state: any) => state.oneSprint.sprint)
-
+    const dataTask = useSelector((state: any) => state.allTask.tasks)
     // console.log("name:", nameTask);
+    console.log("dataTask", dataTask);
 
 
     // console.log("column:", column);
-
+    useEffect(() => {
+        dispatch(SprintSlice.actions.setColumn({ dataTask, editColumnId }))
+    }, [dispatch, dataTask, editColumnId])
     const handleAddNewTask = () => {
-        // console.log("CHECKID:", editColumnId);
+        console.log("CHECKID:", editColumnId);
 
-        dispatch(SprintSlice.actions.addNewTask({
-            id: editColumnId,
-            tasks: {
-                _id: v4(),
-                name: nameTask
-            }
+        dispatch(TasksSlice.actions.addNewTask({
+            _id: v4(),
+            name: nameTask,
+            status: editColumnId,
+
         }))
 
     }
@@ -51,7 +54,7 @@ const Column: React.FC<ColumnProps> = ({ column, editColumnId }) => {
         <div className='Column'>
 
             <div className='Column__list-task'>
-                <Droppable droppableId={column.id} key={column.id}>
+                <Droppable droppableId={column.id} >
                     {
                         provided => (
                             <div ref={provided.innerRef}
@@ -60,9 +63,10 @@ const Column: React.FC<ColumnProps> = ({ column, editColumnId }) => {
                                 {
 
                                     column.tasks.map((task, taskIndex) => (
-                                        <div className='column-task-bag'>
+                                        <div className='column-task-bag' key={task._id}>
                                             <div className='columns-task-item'>
                                                 <TaskItem
+                                                    setTaskIndex={setTaskIndex}
                                                     key={task._id}
                                                     index={taskIndex}
                                                     task={task}
@@ -80,7 +84,7 @@ const Column: React.FC<ColumnProps> = ({ column, editColumnId }) => {
                 </Droppable>
                 {
                     isOpenForm
-                        ? <form id='form-add-task' onSubmit={handleAddNewTask} >
+                        ? <div id='form-add-task' >
 
                             <div className='top-form-addTask-onlyColumn'>
                                 <button className='btn-cancle-addTask-onlyColumn' onClick={() => setIsOpenForm(false)}><ClearIcon className='icon-clear-add-task' /></button>
@@ -103,9 +107,9 @@ const Column: React.FC<ColumnProps> = ({ column, editColumnId }) => {
                                         <EventAvailableOutlinedIcon style={{ color: '#3434348f', fontSize: '22px' }} />
                                     </IconButton>
                                 </div>
-                                <button type='submit' className='btn-save-addTask-onlyColumn' >SAVE</button>
+                                <button className='btn-save-addTask-onlyColumn' onClick={handleAddNewTask}>SAVE</button>
                             </div>
-                        </form>
+                        </div>
                         : <button className='btn-add-task-onlyColumn' onClick={() => setIsOpenForm(true)}>+ NEW TASK</button>
                 }
 

@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Card, CardContent, Typography, CardActions } from '@mui/material'
 import './index.scss'
 import { Draggable } from 'react-beautiful-dnd'
 
 type TaskItemProps = {
-    task: any
-    index: number
+    task: any,
+    index: number,
+    setTaskIndex: (value: number) => void,
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({ task, index }) => {

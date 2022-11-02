@@ -9,7 +9,7 @@ const saveSprintToLocalStorage = (sprint: any) => {
     }
 }
 const initialState: any = {
-    sprint: []
+    sprint: [],
 }
 const SprintSlice = createSlice({
     name: "oneSprint",
@@ -18,46 +18,45 @@ const SprintSlice = createSlice({
         initSprint: (state, action) => {
             state.sprint = action.payload
         },
-        addNewTask: (state, action) => {
-
-            console.log("checkColumn:", action.payload.tasks);
+        setColumn: (state, action) => {
+            console.log("checkColumn:", action.payload);
             state.sprint = state.sprint.map((item: ColumnType) => {
-                console.log("item:", item.tasks);
+
                 return (
-                    item.id === action.payload.id
-                        ? { ...item, tasks: [...item.tasks, { ...action.payload.tasks }] }
+                    item.id === action.payload.editColumnId
+                        ? { ...item, tasks: item.tasks = action.payload.dataTask.filter((task: any) => task.status === item.id) }
                         : { ...item }
                 )
             })
 
-            saveSprintToLocalStorage(state.sprint)
+            // saveSprintToLocalStorage(state.sprint)
         },
-        removeDragDrop: (state, action) => {
-            console.log("action.payload1:", action.payload);
-            state.sprint = state.sprint.map((item: any) => {
-                return (
-                    item.id === action.payload.sourceColumn.id
-                        ? { ...item, tasks: item.tasks = item.tasks.filter((task: any) => task._id !== action.payload.draggableId) }
-                        : { ...item }
-                )
-            })
-            saveSprintToLocalStorage(state.sprint)
-        },
-        updateDragDrop: (state, action) => {
+        // removeDragDrop: (state, action) => {
 
-            console.log("action.payload2:", action.payload.taskDragg);
-            state.sprint = state.sprint.map((item: any) => {
-                return (
-                    item.id === action.payload.result.destination.droppableId
-                        ? { ...item, tasks: [...item.task = action.payload.dataTaskDes] }
-                        : { ...item }
-                )
-            })
+        //     state.sprint = state.sprint.map((item: any) => {
+        //         return (
+        //             item.id === action.payload.sourceColumn.id
+        //                 ? { ...item, tasks: item.tasks = item.tasks.filter((task: any) => task._id !== action.payload.draggableId) }
+        //                 : { ...item }
+        //         )
+        //     })
+        //     saveSprintToLocalStorage(state.sprint)
+        // },
+        // updateDragDrop: (state, action) => {
 
-            saveSprintToLocalStorage(state.sprint)
-        },
+        //     console.log("actin.payloadTest:", action.payload);
+        //     state.sprint = state.sprint.map((item: any) => {
+        //         return (
+        //             item.id === action.payload.result.destination.droppableId
+        //                 ? { ...item, tasks: [...item.tasks, action.payload.taskDraggEnd] }
+        //                 : { ...item }
+        //         )
+        //     })
+
+        //     saveSprintToLocalStorage(state.sprint)
+        // },
         reoderDragDrop: (state, action) => {
-            console.log("actin.payloadTest:", action.payload);
+
 
             state.sprint = state.sprint.map((item: any) => {
 
