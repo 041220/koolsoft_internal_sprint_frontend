@@ -6,11 +6,11 @@ import { Draggable } from 'react-beautiful-dnd'
 type TaskItemProps = {
     task: any,
     index: number,
-    setTaskIndex: (value: number) => void,
+
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({ task, index }) => {
-    // console.log("idTask:", task);
+    console.log("index:", index);
 
     return (
 

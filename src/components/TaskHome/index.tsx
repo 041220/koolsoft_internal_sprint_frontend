@@ -4,50 +4,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import AddNewModal from '../ModalTask/AddNewModal'
 import Column from '../Column/Column'
 import "./index.scss"
-import { v4 } from 'uuid'
 import SprintSlice from '../../redux/slices/SprintSlice'
 import AddIcon from '@mui/icons-material/Add';
 import { DragDropContext, DropResult } from "react-beautiful-dnd"
-import TasksSlice, { Task } from '../../redux/slices/TasksSlice'
 
-
-export type ColumnType = {
-    id: string,
-    title: string,
-    color: string | number,
-    tasks: Task[]
-}
 
 
 const TasksHome: React.FC = () => {
     const [displayModal, setDisplayModal] = useState<boolean>(false)
-    const [columns, setColumns] = useState<ColumnType[]>([
-        { id: "op", title: "OPEN", color: "rgb(211, 211, 211)", tasks: [] },
-        { id: "ip", title: "IN PROGRESS", color: "rgb(255, 84, 13)", tasks: [] },
-        { id: "rv", title: "REVIEW", color: "rgb(255, 153, 0)", tasks: [] },
-        { id: "bg", title: "BUG", color: "rgb(0, 0, 0)", tasks: [] },
-        { id: "cl", title: "CLOSED", color: "rgb(107, 201, 80)", tasks: [] },
-    ])
 
     const dispatch = useDispatch();
 
-    const sprintData = useSelector((state: any) => state.oneSprint.sprint)
+    const sprintData = useSelector((state: any) => state.oneSprint.columns)
 
-    //push init data task vào store
     useEffect(() => {
-        dispatch(SprintSlice.actions.initSprint(columns))
-    }, [dispatch, columns])
-    //Lấy data các task từ local về push vào store
-    useEffect(() => {
-        const getDataSprint = localStorage.getItem("oneSprint");
-        if (getDataSprint) {
-            dispatch(SprintSlice.actions.getDataSprintLocal(JSON.parse(getDataSprint)))
-        }
-    }, [dispatch])
-    useEffect(() => {
-        const getDataTasks = localStorage.getItem("allTask");
+        const getDataTasks = localStorage.getItem("allTasks");
         if (getDataTasks) {
-            dispatch(TasksSlice.actions.getDataTasksLocal(JSON.parse(getDataTasks)))
+            dispatch(SprintSlice.actions.getDataTasksLocal(JSON.parse(getDataTasks)))
         }
     }, [dispatch])
 
@@ -95,7 +68,7 @@ const TasksHome: React.FC = () => {
             //push task drop vào cột đích
             // dispatch(SprintSlice.actions.updateDragDrop({ taskDraggEnd, result }))
 
-            dispatch(TasksSlice.actions.updateStatusTask(taskDraggEnd))
+            dispatch(SprintSlice.actions.updateStatusTask(taskDraggEnd))
         }
     }
 
@@ -122,7 +95,6 @@ const TasksHome: React.FC = () => {
                 <DragDropContext onDragEnd={handleSaveDrag}>
                     {
                         sprintData.map((column: any) => (
-
                             <div className='content-column-bag' key={column.id}>
                                 <div className='content-column-item'>
 

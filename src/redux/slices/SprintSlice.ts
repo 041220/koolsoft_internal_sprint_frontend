@@ -1,39 +1,88 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ColumnType } from "../../components/TaskHome";
 
-const saveSprintToLocalStorage = (sprint: any) => {
+
+export type InitialState = {
+    columns: ColumnType[],
+    allTasks: Task[]
+}
+
+export type ColumnType = {
+    id: string,
+    title: string,
+    color: string,
+    tasks: Task[]
+}
+export type Task = {
+    _id: string,
+    name: string,
+    status?: string,
+    index: number,
+    statusStage?: number,
+    description?: string,
+    bugDescription?: string,
+    createDate?: number,
+    startDate?: number,
+    deadline?: number,
+    estimatePoints?: number,
+    actualPoints?: number,
+    dificulty?: number,
+    priority?: number,
+    projectId?: any,
+    sprintId?: any,
+    parrentId?: any,
+    deleteAt?: number,
+}
+const saveTasksToLocalStorage = (oneSprint: any) => {
     try {
-        localStorage.setItem("oneSprint", JSON.stringify(sprint))
+        localStorage.setItem("allTasks", JSON.stringify(oneSprint.allTasks))
     } catch (error) {
 
     }
 }
-const initialState: any = {
-    sprint: [],
+const initialState: InitialState = {
+    columns: [
+        { id: "op", title: "OPEN", color: "rgb(211, 211, 211)", tasks: [] },
+        { id: "ip", title: "IN PROGRESS", color: "rgb(255, 84, 13)", tasks: [] },
+        { id: "rv", title: "REVIEW", color: "rgb(255, 153, 0)", tasks: [] },
+        { id: "bg", title: "BUG", color: "rgb(0, 0, 0)", tasks: [] },
+        { id: "cl", title: "CLOSED", color: "rgb(107, 201, 80)", tasks: [] },
+    ],
+    allTasks: []
 }
 const SprintSlice = createSlice({
     name: "oneSprint",
     initialState,
     reducers: {
-        initSprint: (state, action) => {
-            state.sprint = action.payload
-        },
+
         setColumn: (state, action) => {
-            console.log("checkColumn:", action.payload);
-            state.sprint = state.sprint.map((item: ColumnType) => {
+
+            state.columns = state.columns.map((item: ColumnType) => {
 
                 return (
                     item.id === action.payload.editColumnId
-                        ? { ...item, tasks: item.tasks = action.payload.dataTask.filter((task: any) => task.status === item.id) }
+                        ? {
+                            ...item, tasks: item.tasks = action.payload.dataTask
+                                .filter((task: any) => task.status === item.id)
+                                ?.map((value: any, index: number) => {
+                                    return (
+                                        { ...value, index }
+                                    )
+                                })
+                        }
                         : { ...item }
                 )
             })
 
             // saveSprintToLocalStorage(state.sprint)
         },
+        addNewTask: (state, action) => {
+
+            state.allTasks.push(action.payload)
+            saveTasksToLocalStorage(state)
+        },
         // removeDragDrop: (state, action) => {
 
-        //     state.sprint = state.sprint.map((item: any) => {
+        //     state = state.map((item: any) => {
         //         return (
         //             item.id === action.payload.sourceColumn.id
         //                 ? { ...item, tasks: item.tasks = item.tasks.filter((task: any) => task._id !== action.payload.draggableId) }
@@ -45,7 +94,7 @@ const SprintSlice = createSlice({
         // updateDragDrop: (state, action) => {
 
         //     console.log("actin.payloadTest:", action.payload);
-        //     state.sprint = state.sprint.map((item: any) => {
+        //     state = state.map((item: any) => {
         //         return (
         //             item.id === action.payload.result.destination.droppableId
         //                 ? { ...item, tasks: [...item.tasks, action.payload.taskDraggEnd] }
@@ -58,7 +107,7 @@ const SprintSlice = createSlice({
         reoderDragDrop: (state, action) => {
 
 
-            state.sprint = state.sprint.map((item: any) => {
+            state.columns = state.columns.map((item: any) => {
 
                 return (
                     item.id === action.payload.result.destination.droppableId
@@ -67,11 +116,21 @@ const SprintSlice = createSlice({
                 )
 
             })
-            console.log("state.sprint2:", state.sprint);
-            saveSprintToLocalStorage(state.sprint)
+
         },
-        getDataSprintLocal: (state, action) => {
-            state.sprint = action.payload
+
+        getDataTasksLocal: (state, action) => {
+            state.allTasks = action.payload
+        },
+        updateStatusTask: (state, action) => {
+            state.allTasks.map((item: any) => {
+                return (
+                    item._id === action.payload._id
+                        ? { ...item, status: item.status = action.payload.status }
+                        : { ...item }
+                )
+            })
+            saveTasksToLocalStorage(state)
         }
     }
 })
